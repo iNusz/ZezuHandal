@@ -8,24 +8,28 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import static android.os.Build.VERSION_CODES.M;
+
 /**
  * Created by SeungHoShin on 2017. 7. 11..
  */
-
 public class PermissionControl {
 
+    // todo 권한 부분이 이상하게 확인을 하지 않았는데도 지혼자된다..
 
     // 위치제공자 사용을 위한 권한처리
     private static final int REQ_PERMISSION = 10012312;
 
     private static String permissions[] = {
-            Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.INTERNET
     };
 
 
     public static void checkVersion(Activity activity){
         // 마시멜로 이상버전에서만 런타임 권한체크
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if(Build.VERSION.SDK_INT >= M) {
             checkPermission(activity);
         }else {
             callInit(activity);
@@ -34,14 +38,20 @@ public class PermissionControl {
 
 
     @TargetApi(Build.VERSION_CODES.M)
-    private static void checkPermission(Activity activity) {
+    public static void checkPermission(Activity activity){
         //1 권한체크 - 특정권한이 있는지 시스템에 물어본다
-        if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-        } else {
+        boolean denied = false;
+        for(String perm : permissions){
+            if(activity.checkSelfPermission(perm) != PackageManager.PERMISSION_GRANTED){
+                denied = true;
+                break;
+            }
+        }
+        if(denied){
             // 2. 권한이 없으면 사용자에 권한을 달라고 요청
-            String permissions[] = {Manifest.permission.ACCESS_FINE_LOCATION};
-            activity.requestPermissions(permissions, REQ_PERMISSION); // -> 권한을 요구하는 팝업이 사용자 화면에 노출된다
+            activity.requestPermissions(permissions ,REQ_PERMISSION);
+        }else{
+            callInit(activity);
         }
     }
 

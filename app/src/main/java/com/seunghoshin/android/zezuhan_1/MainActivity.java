@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,12 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.seunghoshin.android.zezuhan_1.permission.PermissionControl;
 import com.seunghoshin.android.zezuhan_1.tablayout.DongbuFragment;
 import com.seunghoshin.android.zezuhan_1.tablayout.SubuFragment;
 import com.seunghoshin.android.zezuhan_1.tablayout.SugiFragment;
@@ -34,7 +27,7 @@ import com.seunghoshin.android.zezuhan_1.tablayout.ZezuFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, PermissionControl.CallBack {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     ViewPager pager;
     TabLayout tab;
@@ -43,10 +36,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     LocationManager manager;
     android.support.v7.app.ActionBar zezuActionBar;
-
-    static final String TAG = "MainActivity";
-    FirebaseDatabase database;
-    DatabaseReference myRef;
 
 
     public LocationManager getLocationManager() {
@@ -59,14 +48,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // 파이어베이스 데이터베이스 연결
-        database = FirebaseDatabase.getInstance();
-        // 레퍼런스를 가져옴
-        myRef = database.getReference("zezu");
-        // 값 세팅 
-//        myRef.setValue("Hello,World2");
-        initData();
 
 
         /**
@@ -139,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+
     private void actionBarColor() {
         // Action Bar의 색상을 빨간색으로 변경
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -179,26 +161,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
-    @Override
-    public void init() {
 
-    }
-
-
-    private void initData() {
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String value = dataSnapshot.getValue(String.class);
-                // todo dataSnapshot.getKey --> 키값 위에는 value임
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-    }
 
 }
