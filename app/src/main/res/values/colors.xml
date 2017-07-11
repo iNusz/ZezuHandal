@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorStatusbar">#683ae8</color>
+    <color name="colorActionbar">#4118b2</color>
+    <color name="colorTitle1">#fcad5e</color>
+    <color name="colorTitle2">#fcad5e</color>
+    <color name="colorTitle3">#fccc32</color>
+    <color name="colorMoon">#fccc32</color>
+    <color name="menu_character_color">#C8C9CA</color>
+
+</resources>
