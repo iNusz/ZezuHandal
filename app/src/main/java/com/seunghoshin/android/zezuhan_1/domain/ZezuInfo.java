@@ -20,11 +20,11 @@ public class ZezuInfo {
     }
 
 
-//    public ZezuInfo(String dtHomeName, String dtAdress, String dtPrice) {
-//        this.dtHomeName = dtHomeName;
-//        this.dtAdress = dtAdress;
-//        this.dtPrice = dtPrice;
-//    }
+    public ZezuInfo(String dtHomeName, String dtAdress, String dtPrice) {
+        this.dtHomeName = dtHomeName;
+        this.dtAdress = dtAdress;
+        this.dtPrice = dtPrice;
+    }
 
 
 }
