@@ -12,8 +12,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.location.LocationListener;
 
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -136,20 +136,21 @@ public class SubuFragment extends Fragment implements OnMapReadyCallback {
 
         }
 
-//        @Override
-//        public void onStatusChanged(String provider, int status, Bundle extras) {
-//            // 위치 공급자의 상태가 바뀔 때 호출 됩니다
-//        }
-//
-//        @Override
-//        public void onProviderEnabled(String provider) {
-//            // 위치 공급자가 사용 가능해질(enabled) 때 호출 됩니다.
-//        }
-//
-//        @Override
-//        public void onProviderDisabled(String provider) {
-//            //  위치 공급자가 사용 불가능해질(disabled) 때 호출 됩니다.
-//        }
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+
 
     };
 }

@@ -15,8 +15,6 @@ import static android.os.Build.VERSION_CODES.M;
  */
 public class PermissionControl {
 
-    // todo 권한 부분이 이상하게 확인을 하지 않았는데도 지혼자된다..
-
     // 위치제공자 사용을 위한 권한처리
     private static final int REQ_PERMISSION = 10012312;
 

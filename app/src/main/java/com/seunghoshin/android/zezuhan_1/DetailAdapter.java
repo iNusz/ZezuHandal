@@ -8,9 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.seunghoshin.android.zezuhan_1.domain.ZezuInfo;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by SeungHoShin on 2017. 7. 10..
@@ -20,6 +24,9 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.Holder> {
 
     private List<ZezuInfo> data;
     private LayoutInflater inflater;
+
+    //glide 사용 을 위한 컨텍 스트
+    private Context context = null;
 
     public DetailAdapter(Context context, List<ZezuInfo> data) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -37,20 +44,30 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.Holder> {
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(context == null)
+            context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_detail, parent, false);
         return new Holder(view);
     }
 
     @Override
     public void onBindViewHolder(DetailAdapter.Holder holder, int position) {
+
         ZezuInfo info = data.get(position);
-        holder.dtMainImage.setImageResource(Integer.parseInt(info.dtMainImage));
+
         holder.dtHomeName.setText(info.dtHomeName);
         holder.dtAdress.setText(info.dtAdress);
         holder.dtIntro.setText(info.dtIntro);
-        holder.dtPrice.setText(info.dtPrice);
+        holder.monthPrice.setText(info.monthPrice);
         holder.dtPreprice.setText(info.dtPreprice);
-        holder.dtImageinfo.setText(info.dtImageinfo);
+
+        //todo 글라이드로 뺴야된다
+        Glide.with(context)
+                .load(data.get(position).fileUriString) //로드할 대상
+                .centerCrop()
+                .placeholder(R.mipmap.ic_launcher) //로드가 안되었을 경우
+                .into(holder.imageView);
+
         holder.position = position;
 
     }
@@ -58,24 +75,24 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.Holder> {
     class Holder extends RecyclerView.ViewHolder {
 
         private int position;
-        private ImageView dtMainImage;
-        private TextView dtHomeName;
-        private TextView dtAdress;
-        private TextView dtIntro;
-        private TextView dtPrice;
-        private TextView dtPreprice;
-        private TextView dtImageinfo;
+
+        @BindView(R.id.dtHomeName)
+        TextView dtHomeName;
+        @BindView(R.id.imageView)
+        ImageView imageView;
+        @BindView(R.id.dtAdress)
+        TextView dtAdress;
+        @BindView(R.id.dtIntro)
+        TextView dtIntro;
+        @BindView(R.id.monthPrice)
+        TextView monthPrice;
+        @BindView(R.id.dtPreprice)
+        TextView dtPreprice;
+
 
         public Holder(View v) {
             super(v);
-            dtMainImage = (ImageView) v.findViewById(R.id.dtMainImage);
-            dtHomeName = (TextView) v.findViewById(R.id.dtHomeName);
-            dtAdress = (TextView) v.findViewById(R.id.dtAdress);
-            dtIntro = (TextView) v.findViewById(R.id.dtIntro);
-            dtPrice = (TextView) v.findViewById(R.id.dtPrice);
-            dtPreprice = (TextView) v.findViewById(R.id.dtPreprice);
-            dtImageinfo = (TextView) v.findViewById(R.id.dtImageinfo);
-
+            ButterKnife.bind(this, v);
         }
     }
 
