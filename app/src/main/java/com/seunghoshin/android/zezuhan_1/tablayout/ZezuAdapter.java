@@ -47,8 +47,8 @@ public class ZezuAdapter extends RecyclerView.Adapter<ZezuAdapter.Holder> {
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-    // todo 이게 없으면 위에 null 값이 떠서 앱이 죽는다
-        if(context == null)
+        // 이게 없으면 위에 null 값이 떠서 앱이 죽는다
+        if (context == null)
             context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_zezu, parent, false);
         return new Holder(view);
@@ -72,7 +72,6 @@ public class ZezuAdapter extends RecyclerView.Adapter<ZezuAdapter.Holder> {
                 .centerCrop()
                 .placeholder(R.mipmap.ic_launcher) //로드가 안되었을 경우
                 .into(holder.imageView);
-
     }
 
 
@@ -93,14 +92,16 @@ public class ZezuAdapter extends RecyclerView.Adapter<ZezuAdapter.Holder> {
         public Holder(View v) {
             super(v);
 
-            ButterKnife.bind(this,v);
+            ButterKnife.bind(this, v);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), DetailActivity.class);
-                    intent.putExtra("Zezu_List",position);
+                    intent.putExtra("LIST_POSITION",position);
+                    intent.putExtra("TAB", "zezu");
                     v.getContext().startActivity(intent);
+
                 }
             });
 

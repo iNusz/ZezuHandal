@@ -33,7 +33,7 @@ public class SugiFragment extends Fragment {
 
     RecyclerView recycler;
     SugiAdapter adapter;
-    List<ZezuInfo> data = new ArrayList<>();
+    public static List<ZezuInfo> data = new ArrayList<>();
 
     // 프로그래스 다이얼로그
     private ProgressDialog dialog;
@@ -83,17 +83,16 @@ public class SugiFragment extends Fragment {
         query.addValueEventListener(new ValueEventListener() {
 
             @Override
-            public void onDataChange(DataSnapshot data) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 // 해당 데이터를 리스트에 저장한다 . 아래에 있는 변경된데이터
-                List<ZezuInfo> list = new ArrayList<ZezuInfo>();
-                for (DataSnapshot item : data.getChildren()) {
+                data.clear();
+                for (DataSnapshot item : dataSnapshot.getChildren()) {
                     // 파이어베이스 모든 데이터 하나단위를 클래스로 변경해준다
                     ZezuInfo info = item.getValue(ZezuInfo.class);
-                    list.add(info);
+                    data.add(info);
                 }
 
-
-                refreshList(list);
+                refreshList(data);
                 dialog.dismiss();
             }
 

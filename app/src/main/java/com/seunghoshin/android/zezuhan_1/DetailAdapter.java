@@ -61,7 +61,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.Holder> {
         holder.monthPrice.setText(info.monthPrice);
         holder.dtPreprice.setText(info.dtPreprice);
 
-        //todo 글라이드로 뺴야된다
+        // 글라이드로 뺴야된다
         Glide.with(context)
                 .load(data.get(position).fileUriString) //로드할 대상
                 .centerCrop()

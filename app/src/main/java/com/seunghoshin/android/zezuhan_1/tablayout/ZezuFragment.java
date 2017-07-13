@@ -34,7 +34,7 @@ public class ZezuFragment extends Fragment {
 
     RecyclerView recycler;
     ZezuAdapter adapter;
-    List<ZezuInfo> data = new ArrayList<>();
+    public static List<ZezuInfo> data = new ArrayList<>();
 
     // 프로그래스 다이얼로그
     private ProgressDialog dialog;
@@ -61,6 +61,7 @@ public class ZezuFragment extends Fragment {
         recycler.setAdapter(adapter);
         recycler.setLayoutManager(new LinearLayoutManager(container.getContext()));
 
+
         //다이얼로그
         dialog = new ProgressDialog(container.getContext());
         dialog.setTitle("로딩중");
@@ -76,6 +77,7 @@ public class ZezuFragment extends Fragment {
         super.onStart();
         dialog.show();
         loadData();
+
     }
 
     // Read DataBase
@@ -86,17 +88,13 @@ public class ZezuFragment extends Fragment {
         query.addValueEventListener(new ValueEventListener() {
 
             @Override
-            public void onDataChange(DataSnapshot data) {
-                // 해당 데이터를 리스트에 저장한다 . 아래에 있는 변경된데이터
-                List<ZezuInfo> list = new ArrayList<ZezuInfo>();
-                for (DataSnapshot item : data.getChildren()) {
-                    // 파이어베이스 모든 데이터 하나단위를 클래스로 변경해준다
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                data.clear();
+                for (DataSnapshot item : dataSnapshot.getChildren()) {
                     ZezuInfo info = item.getValue(ZezuInfo.class);
-                    list.add(info);
+                    data.add(info);
                 }
-
-
-                refreshList(list);
+                refreshList(data);
                 dialog.dismiss();
             }
 

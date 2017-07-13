@@ -1,12 +1,15 @@
 package com.seunghoshin.android.zezuhan_1.domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by SeungHoShin on 2017. 7. 10..
  */
 
-public class ZezuInfo {
+public class ZezuInfo implements Parcelable{
 
     public String dtMainImage; //메인 이미지 , 더미용
     public String dtHomeName; // 숙소명
@@ -28,6 +31,20 @@ public class ZezuInfo {
 
     private List<String> mFacility, mSafety;
 
+
+
+
+    public static final Creator<ZezuInfo> CREATOR = new Creator<ZezuInfo>() {
+        @Override
+        public ZezuInfo createFromParcel(Parcel in) {
+            return new ZezuInfo(in);
+        }
+
+        @Override
+        public ZezuInfo[] newArray(int size) {
+            return new ZezuInfo[size];
+        }
+    };
 
     public List<String> getmFacility() {
         return mFacility;
@@ -210,5 +227,55 @@ public class ZezuInfo {
         this.numBed = numBed;
         this.numShower = numShower;
         this.numParking = numParking;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    protected ZezuInfo(Parcel in) {
+        dtMainImage = in.readString();
+        dtHomeName = in.readString();
+        dtAdress = in.readString();
+        dtIntro = in.readString();
+        monthPrice = in.readString();
+        dtPreprice = in.readString();
+        dtDeposit = in.readString();
+        fileUriString = in.readString();
+        startDate = in.readString();
+        endDate = in.readString();
+        area = in.readString();
+        houseStyle = in.readString();
+        numPeople = in.readString();
+        numRoom = in.readString();
+        numBed = in.readString();
+        numShower = in.readString();
+        numParking = in.readString();
+        mFacility = in.createStringArrayList();
+        mSafety = in.createStringArrayList();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(dtMainImage);
+        dest.writeString(dtHomeName);
+        dest.writeString(dtAdress);
+        dest.writeString(dtIntro);
+        dest.writeString(monthPrice);
+        dest.writeString(dtPreprice);
+        dest.writeString(dtDeposit);
+        dest.writeString(fileUriString);
+        dest.writeString(startDate);
+        dest.writeString(endDate);
+        dest.writeString(area);
+        dest.writeString(houseStyle);
+        dest.writeString(numPeople);
+        dest.writeString(numRoom);
+        dest.writeString(numBed);
+        dest.writeString(numShower);
+        dest.writeString(numParking);
+        dest.writeStringList(mFacility);
+        dest.writeStringList(mSafety);
     }
 }

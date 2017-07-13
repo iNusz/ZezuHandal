@@ -2,11 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.seunghoshin.android.zezuhan_1">
 
-    <!-- 지도사용권한 부여 -->
+    <!-- 지도, 인터넷, 쓰기 사용권한 부여 -->
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
 
     <application
         android:allowBackup="true"
@@ -28,7 +29,6 @@
         </activity>
         <activity android:name=".FilterActivity" />
         <activity android:name=".DetailActivity">
-
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
 
