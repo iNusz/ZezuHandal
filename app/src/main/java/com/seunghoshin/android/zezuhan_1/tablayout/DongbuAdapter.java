@@ -20,18 +20,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by SeungHoShin on 2017. 7. 11..
+ * Created by SeungHoShin on 2017. 7. 13..
  */
 
-public class ZezuAdapter extends RecyclerView.Adapter<ZezuAdapter.Holder> {
-
+public class DongbuAdapter extends RecyclerView.Adapter<DongbuAdapter.Holder>{
     private List<ZezuInfo> data;
     private LayoutInflater inflater;
 
     //glide 사용 을 위한 컨텍 스트
     private Context context = null;
 
-    public ZezuAdapter(Context context, List<ZezuInfo> data) {
+    public DongbuAdapter(Context context, List<ZezuInfo> data) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.data = data;
     }
@@ -47,8 +46,8 @@ public class ZezuAdapter extends RecyclerView.Adapter<ZezuAdapter.Holder> {
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-    // todo 이게 없으면 위에 null 값이 떠서 앱이 죽는다
-        if(context == null)
+        // todo 이게 없으면 위에 null 값이 떠서 앱이 죽는다
+        if (context == null)
             context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_zezu, parent, false);
         return new Holder(view);
@@ -93,13 +92,13 @@ public class ZezuAdapter extends RecyclerView.Adapter<ZezuAdapter.Holder> {
         public Holder(View v) {
             super(v);
 
-            ButterKnife.bind(this,v);
+            ButterKnife.bind(this, v);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), DetailActivity.class);
-                    intent.putExtra("Zezu_List",position);
+                    intent.putExtra("Dongbu_List", position);
                     v.getContext().startActivity(intent);
                 }
             });
@@ -109,3 +108,5 @@ public class ZezuAdapter extends RecyclerView.Adapter<ZezuAdapter.Holder> {
 
 
 }
+
+

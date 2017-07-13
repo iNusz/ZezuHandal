@@ -14,6 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.seunghoshin.android.zezuhan_1.R;
 import com.seunghoshin.android.zezuhan_1.domain.ZezuInfo;
@@ -53,7 +54,7 @@ public class ZezuFragment extends Fragment {
         database = FirebaseDatabase.getInstance();
         zezuRef = database.getReference("zezu");
 
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
         recycler = (RecyclerView) view.findViewById(R.id.recycler);
         adapter = new ZezuAdapter(container.getContext(), data);
@@ -65,13 +66,6 @@ public class ZezuFragment extends Fragment {
         dialog.setTitle("로딩중");
         dialog.setMessage("목록을 로딩중입니다... 잠시만 기다려주세요");
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-
-//        // 임시 Loader 부분
-//        ZezuInfo info = new ZezuInfo();
-//        info.dtHomeName = "이곳은 dtHomeName";
-//        info.dtAdress = "이곳은 주소입니다";
-//        info.monthPrice = "이곳은 monthPrice";
-//        data.add(info);
 
         return view;
 
@@ -87,7 +81,10 @@ public class ZezuFragment extends Fragment {
     // Read DataBase
     // 데이터를 뿌려주는 이벤트 리스너를 달아준다
     private void loadData() {
-        zezuRef.addValueEventListener(new ValueEventListener() {
+        Query query = zezuRef.child("제주시").orderByKey();
+
+        query.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot data) {
                 // 해당 데이터를 리스트에 저장한다 . 아래에 있는 변경된데이터
@@ -97,6 +94,8 @@ public class ZezuFragment extends Fragment {
                     ZezuInfo info = item.getValue(ZezuInfo.class);
                     list.add(info);
                 }
+
+
                 refreshList(list);
                 dialog.dismiss();
             }
@@ -106,6 +105,8 @@ public class ZezuFragment extends Fragment {
 
             }
         });
+
+
     }
 
 

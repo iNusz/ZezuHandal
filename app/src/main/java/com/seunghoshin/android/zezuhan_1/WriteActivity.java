@@ -264,11 +264,11 @@ public class WriteActivity extends AppCompatActivity {
         if (imageUri != null) {
             info.fileUriString = imageUri.toString();
         }
-
+        //todo 동부 , 서부로 키값을 나눠서 만들어준다음에 작성을 했을시 거기에 해당하는 키값으로 들어가게 만들어 줘야한다 .
         // 2. 입력할 데이터의 키 생성
-        String zezuKey = zezuRef.push().getKey(); // 자동생성된 키를 가져온다
+        String zezuKey = area;                    //zezuRef.push().getKey(); // 자동생성된 키를 가져온다
         // 3. key아래쪽으로 한칸 내려간 노드에서 작업을 할 것이다 / 생성된 키를 래퍼런스로 데이터를 입력
-        zezuRef.child(zezuKey).setValue(info);
+        zezuRef.child(zezuKey).child(dtHomeName).setValue(info);
         // 데이터 입력후 창 닫기
         dialog.dismiss();
         finish();
