@@ -40,7 +40,8 @@ public class WriteActivity extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference zezuRef;
-    ZezuInfo datas = new ZezuInfo();
+    // todo adasd
+    public static ZezuInfo datas = new ZezuInfo();
 
     @BindView(R.id.editHomeName)
     EditText editHomeName;
@@ -148,6 +149,9 @@ public class WriteActivity extends AppCompatActivity {
     @BindView(R.id.checkboxSafetyCard)
     CheckBox checkboxSafetyCard;
 
+    @BindView(R.id.editphoneNum)
+    EditText editphoneNum;
+
     // 스토리지 영역 추가
     private StorageReference mStorageRef;
 
@@ -179,6 +183,7 @@ public class WriteActivity extends AppCompatActivity {
     }
 
     //데이터 전송
+
     public void postData(View view) {
         dialog.show();
 
@@ -198,7 +203,7 @@ public class WriteActivity extends AppCompatActivity {
         setValueSafe();
 
         if (datas.getDtHomeName().equals("") || datas.getMonthPrice().equals("") || datas.getDtDeposit().equals("") ||
-                datas.getDtPreprice().equals("") || datas.getArea().equals("")) {
+                datas.getDtPreprice().equals("") || datas.getArea().equals("") || datas.getPhoneNum().equals("")) {
             Toast.makeText(this, "필수 항목을 입력해 주세요", Toast.LENGTH_SHORT).show();
             scrollView.fullScroll(View.FOCUS_UP);
         } else {
@@ -238,7 +243,7 @@ public class WriteActivity extends AppCompatActivity {
 
 
     public void afterUploadFile(Uri imageUri) {
-        // todo 여기를 채워야함
+
         String dtHomeName = editHomeName.getText().toString();
         String dtAdress = editdtAdress.getText().toString();
         String monthPrice = editmonthPrice.getText().toString();
@@ -254,17 +259,18 @@ public class WriteActivity extends AppCompatActivity {
         String numBed = editnumBed.getText().toString();
         String numShower = editnumShower.getText().toString();
         String numParking = editnumParking.getText().toString();
+        String phoneNum = editphoneNum.getText().toString();
 
 
         // 파이어 베이스 데이터베이스에 데이터 넣기
-        // 1. 데이터 객체 생성 todo 여기에도 객체를 set,get해줘야함
+        // 1. 데이터 객체 생성
         ZezuInfo info = new ZezuInfo(dtHomeName, dtAdress, dtIntro, monthPrice, dtPreprice, dtDeposit, startDate, endDate, area,
-                houseStyle, numPeople, numRoom, numBed, numShower, numParking);
+                houseStyle, numPeople, numRoom, numBed, numShower, numParking, phoneNum);
 
         if (imageUri != null) {
             info.fileUriString = imageUri.toString();
         }
-        //todo 동부 , 서부로 키값을 나눠서 만들어준다음에 작성을 했을시 거기에 해당하는 키값으로 들어가게 만들어 줘야한다 .
+        // 동부 , 서부, 지역별로 로 키값을 나눠서 만들어준다음에 작성을 했을시 거기에 해당하는 키값으로 들어가게 만들어 줘야한다 .
         // 2. 입력할 데이터의 키 생성
         String zezuKey = area;                    //zezuRef.push().getKey(); // 자동생성된 키를 가져온다
         // 3. key아래쪽으로 한칸 내려간 노드에서 작업을 할 것이다 / 생성된 키를 래퍼런스로 데이터를 입력
@@ -362,36 +368,6 @@ public class WriteActivity extends AppCompatActivity {
         datas.setmFacility(facility);
     }
 
-//    private void setValueKeyword() {
-//        if (checkboxPublicTransport.isChecked() == true)
-//            datas.setPublicTransport(checkboxPublicTransport.getHint().toString());
-//        if (checkboxParking.isChecked() == true)
-//            datas.setParking(checkboxParking.getHint().toString());
-//        if (checkboxConvenience.isChecked() == true)
-//            datas.setConvenience(checkboxConvenience.getHint().toString());
-//        if (checkboxUpTown.isChecked() == true)
-//            datas.setUpTown(checkboxUpTown.getHint().toString());
-//        if (checkboxSchool.isChecked() == true)
-//            datas.setSchool(checkboxSchool.getHint().toString());
-//        if (checkboxChild.isChecked() == true)
-//            datas.setChild(checkboxChild.getHint().toString());
-//        if (checkboxPet.isChecked() == true)
-//            datas.setPet(checkboxPet.getHint().toString());
-//        if (checkboxFullOption.isChecked() == true)
-//            datas.setFullOption(checkboxFullOption.getHint().toString());
-//        if (checkboxQuiet.isChecked() == true)
-//            datas.setQuiet(checkboxQuiet.getHint().toString());
-//        if (checkboxYard.isChecked() == true)
-//            datas.setYard(checkboxYard.getHint().toString());
-//        if (checkboxNearTheSea.isChecked() == true)
-//            datas.setNearTheSea(checkboxNearTheSea.getHint().toString());
-//        if (checkboxNearTheForest.isChecked() == true)
-//            datas.setNearTheForest(checkboxNearTheForest.getHint().toString());
-//        if (checkboxNearTheAirport.isChecked() == true)
-//            datas.setNearTheAirport(checkboxNearTheAirport.getHint().toString());
-//    }
-
-
     private void setValueAdditional() {
         datas.setHouseStyle(edithouseStyle.getText().toString());
         datas.setNumPeople(editnumPeople.getText().toString());
@@ -404,14 +380,13 @@ public class WriteActivity extends AppCompatActivity {
 
     private void setValueBasic() {
         datas.setDtHomeName(editHomeName.getText().toString());
-//        datas.setStartDate(editStartDate.getText().toString());
-//        datas.setEndDate(editEndDate.getText().toString());
         datas.setMonthPrice(editmonthPrice.getText().toString());
         datas.setDtPreprice(editdtPreprice.getText().toString());
         datas.setDtDeposit(editdtDeposit.getText().toString());
         datas.setArea(editarea.getText().toString());
         datas.setDtAdress(editdtAdress.getText().toString());
         datas.setDtIntro(editdtIntro.getText().toString());
+        datas.setPhoneNum(editphoneNum.getText().toString());
     }
 
 

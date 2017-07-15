@@ -1,15 +1,12 @@
 package com.seunghoshin.android.zezuhan_1.domain;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.util.List;
 
 /**
  * Created by SeungHoShin on 2017. 7. 10..
  */
 
-public class ZezuInfo implements Parcelable{
+public class ZezuInfo {
 
     public String dtMainImage; //메인 이미지 , 더미용
     public String dtHomeName; // 숙소명
@@ -28,23 +25,17 @@ public class ZezuInfo implements Parcelable{
     public String numBed; //침대수
     public String numShower; //욕실수
     public String numParking; //주차장 수
+    public String phoneNum; //숙소 전화번호
 
     private List<String> mFacility, mSafety;
 
+    public String getPhoneNum() {
+        return phoneNum;
+    }
 
-
-
-    public static final Creator<ZezuInfo> CREATOR = new Creator<ZezuInfo>() {
-        @Override
-        public ZezuInfo createFromParcel(Parcel in) {
-            return new ZezuInfo(in);
-        }
-
-        @Override
-        public ZezuInfo[] newArray(int size) {
-            return new ZezuInfo[size];
-        }
-    };
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
+    }
 
     public List<String> getmFacility() {
         return mFacility;
@@ -206,12 +197,10 @@ public class ZezuInfo implements Parcelable{
     }
 
 
-
     // file Uri는 빼줌
-    public ZezuInfo(String dtHomeName, String dtAdress, String dtIntro, String monthPrice,
+    public ZezuInfo(String dtHomeName, String dtAdress, String dtIntro, String monthPrice, String phoneNum,
                     String dtPreprice, String dtDeposit, String startDate, String endDate, String area,
-                    String houseStyle, String numPeople, String numRoom, String numBed, String numShower, String numParking)
-    {
+                    String houseStyle, String numPeople, String numRoom, String numBed, String numShower, String numParking) {
         this.dtHomeName = dtHomeName;
         this.dtAdress = dtAdress;
         this.dtIntro = dtIntro;
@@ -227,55 +216,9 @@ public class ZezuInfo implements Parcelable{
         this.numBed = numBed;
         this.numShower = numShower;
         this.numParking = numParking;
+        this.phoneNum = phoneNum;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    protected ZezuInfo(Parcel in) {
-        dtMainImage = in.readString();
-        dtHomeName = in.readString();
-        dtAdress = in.readString();
-        dtIntro = in.readString();
-        monthPrice = in.readString();
-        dtPreprice = in.readString();
-        dtDeposit = in.readString();
-        fileUriString = in.readString();
-        startDate = in.readString();
-        endDate = in.readString();
-        area = in.readString();
-        houseStyle = in.readString();
-        numPeople = in.readString();
-        numRoom = in.readString();
-        numBed = in.readString();
-        numShower = in.readString();
-        numParking = in.readString();
-        mFacility = in.createStringArrayList();
-        mSafety = in.createStringArrayList();
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(dtMainImage);
-        dest.writeString(dtHomeName);
-        dest.writeString(dtAdress);
-        dest.writeString(dtIntro);
-        dest.writeString(monthPrice);
-        dest.writeString(dtPreprice);
-        dest.writeString(dtDeposit);
-        dest.writeString(fileUriString);
-        dest.writeString(startDate);
-        dest.writeString(endDate);
-        dest.writeString(area);
-        dest.writeString(houseStyle);
-        dest.writeString(numPeople);
-        dest.writeString(numRoom);
-        dest.writeString(numBed);
-        dest.writeString(numShower);
-        dest.writeString(numParking);
-        dest.writeStringList(mFacility);
-        dest.writeStringList(mSafety);
-    }
 }

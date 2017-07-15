@@ -70,7 +70,6 @@ public class SugiAdapter extends RecyclerView.Adapter<SugiAdapter.Holder>{
         Glide.with(context)
                 .load(data.get(position).fileUriString) //로드할 대상
                 .centerCrop()
-                .placeholder(R.mipmap.ic_launcher) //로드가 안되었을 경우
                 .into(holder.imageView);
 
     }

@@ -102,6 +102,14 @@
                 android:inputType="textPostalAddress" />
 
             <EditText
+                android:id="@+id/editphoneNum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="숙소 전화번호"
+                android:inputType="phone" />
+
+            <EditText
                 android:id="@+id/editdtIntro"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"

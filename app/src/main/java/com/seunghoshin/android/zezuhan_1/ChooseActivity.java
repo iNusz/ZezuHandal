@@ -22,6 +22,7 @@ public class ChooseActivity extends AppCompatActivity implements PermissionContr
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose);
         PermissionControl.checkVersion(this);
