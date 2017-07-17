@@ -1,39 +1,28 @@
 package com.seunghoshin.android.zezuhan_1;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.seunghoshin.android.zezuhan_1.domain.ZezuInfo;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 
 public class WriteActivity extends AppCompatActivity {
 
@@ -41,6 +30,7 @@ public class WriteActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference zezuRef;
     // todo adasd
+
     public static ZezuInfo datas = new ZezuInfo();
 
     @BindView(R.id.editHomeName)
@@ -76,10 +66,7 @@ public class WriteActivity extends AppCompatActivity {
 
     @BindView(R.id.btnPost)
     Button btnPost;
-    @BindView(R.id.btnFile)
-    Button btnFile;
-    @BindView(R.id.txtImage)
-    TextView txtImage;
+
     @BindView(R.id.scrollView)
     ScrollView scrollView;
 
@@ -149,8 +136,6 @@ public class WriteActivity extends AppCompatActivity {
     @BindView(R.id.checkboxSafetyCard)
     CheckBox checkboxSafetyCard;
 
-    @BindView(R.id.editphoneNum)
-    EditText editphoneNum;
 
     // 스토리지 영역 추가
     private StorageReference mStorageRef;
@@ -179,143 +164,252 @@ public class WriteActivity extends AppCompatActivity {
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         ButterKnife.bind(this);
+        // edittext에 포커스 주기
+        editHomeName.requestFocus();
+
+
+        editWatcher();
+    }
+
+    private void editWatcher() {
+        editnumPeople.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                editnumRoom.requestFocus();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+        editnumRoom.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                editnumBed.requestFocus();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+        editnumBed.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                editnumShower.requestFocus();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        editnumShower.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                editnumParking.requestFocus();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
     }
 
-    //데이터 전송
 
     public void postData(View view) {
-        dialog.show();
 
-        String imagePath = txtImage.getText().toString();
-        // 이미지가 있으면 이미지 경로를 받아서 저장해야 되기 때문에
-        // 이미지를 먼저 업로드 한다
-        if (imagePath != null && !"".equals(imagePath)) {
-            uploadFile(imagePath);
-        } else {
-            afterUploadFile(null);
-        }
-
-
-        setValueAdditional();
         setValueBasic();
+        setValueAdditional();
+        setValueKeyword();
         setValueFacility();
         setValueSafe();
 
         if (datas.getDtHomeName().equals("") || datas.getMonthPrice().equals("") || datas.getDtDeposit().equals("") ||
-                datas.getDtPreprice().equals("") || datas.getArea().equals("") || datas.getPhoneNum().equals("")) {
-            Toast.makeText(this, "필수 항목을 입력해 주세요", Toast.LENGTH_SHORT).show();
+                datas.getDtPreprice().equals("") || datas.getArea().equals("")) {
+            Toast.makeText(this, "필수항목(기본 정보)을 모두 입력해주세요!", Toast.LENGTH_LONG).show();
             scrollView.fullScroll(View.FOCUS_UP);
         } else {
-
+            datas.setDtMainImage("");
+            zezuRef = database.getReference("Jeju-in-one-month/" +
+                    datas.getDtHomeName() +
+                    datas.getArea() +
+                    datas.getDtAdress() +
+                    datas.getMonthPrice()
+            );
+        }
+        try {
+            zezuRef.setValue(datas);
+            Toast.makeText(this, "새로운 매물이 등록되었습니다.", Toast.LENGTH_SHORT).show();
+            finish();
+        } catch (Exception e) {
+            Toast.makeText(this, "다시 입력해주세요", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void uploadFile(String filePath) {
-        // 스마트 폰에 있는 파일의 경로
-        File file = new File(filePath);
-        Uri uri = Uri.fromFile(file);
-        // 파이어 베이스에 있는 파일 경로
-        String filename = file.getName(); // + 시간값 or UUID 추가해서 만듬
-        // 데이터베이스의 키 = 값과 동일한 구조
-        StorageReference fileRef = mStorageRef.child(filename);
 
-        fileRef.putFile(uri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // 파이어베이스 스토리지에 방금 업로드한 파일의 경로
-                        @SuppressWarnings("VisibleForTests")
-                        Uri uploadedUri = taskSnapshot.getDownloadUrl();
-                        afterUploadFile(uploadedUri);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        Log.e("FBStorage", "Upload Fail:" + exception.getMessage());
-                        dialog.dismiss();
-                        Toast.makeText(WriteActivity.this, "업로드 실패!!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
+    //데이터 전송
+//    public void postData(View view) {
+//        dialog.show();
+//
+//        String imagePath = txtImage.getText().toString();
+//        // 이미지가 있으면 이미지 경로를 받아서 저장해야 되기 때문에
+//        // 이미지를 먼저 업로드 한다
+//        if (imagePath != null && !"".equals(imagePath)) {
+//            uploadFile(imagePath);
+//        } else {
+//            afterUploadFile(null);
+//        }
+//
+//
+//        setValueAdditional();
+//        setValueBasic();
+//        setValueFacility();
+//        setValueSafe();
+//
+//        if (datas.getDtHomeName().equals("") || datas.getMonthPrice().equals("") || datas.getDtDeposit().equals("") ||
+//                datas.getDtPreprice().equals("") || datas.getArea().equals("") || datas.getPhoneNum().equals("")) {
+//            Toast.makeText(this, "필수 항목을 입력해 주세요", Toast.LENGTH_SHORT).show();
+//            scrollView.fullScroll(View.FOCUS_UP);
+//        } else {
+//
+//        }
+//    }
+
+//    public void uploadFile(String filePath) {
+//        // 스마트 폰에 있는 파일의 경로
+//        File file = new File(filePath);
+//        Uri uri = Uri.fromFile(file);
+//        // 파이어 베이스에 있는 파일 경로
+//        String filename = file.getName(); // + 시간값 or UUID 추가해서 만듬
+//        // 데이터베이스의 키 = 값과 동일한 구조
+//        StorageReference fileRef = mStorageRef.child(filename);
+//
+//        fileRef.putFile(uri)
+//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        // 파이어베이스 스토리지에 방금 업로드한 파일의 경로
+//                        @SuppressWarnings("VisibleForTests")
+//                        Uri uploadedUri = taskSnapshot.getDownloadUrl();
+//                        afterUploadFile(uploadedUri);
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception exception) {
+//                        // Handle unsuccessful uploads
+//                        Log.e("FBStorage", "Upload Fail:" + exception.getMessage());
+//                        dialog.dismiss();
+//                        Toast.makeText(WriteActivity.this, "업로드 실패!!", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
+//
+
+//    public void afterUploadFile(Uri imageUri) {
+//
+//        String dtHomeName = editHomeName.getText().toString();
+//        String dtAdress = editdtAdress.getText().toString();
+//        String monthPrice = editmonthPrice.getText().toString();
+//        String dtIntro = editdtIntro.getText().toString();
+//        String dtPreprice = editdtPreprice.getText().toString();
+//        String dtDeposit = editdtDeposit.getText().toString();
+//        String startDate = editstartDate.getText().toString();
+//        String endDate = editendDate.getText().toString();
+//        String area = editarea.getText().toString();
+//        String houseStyle = edithouseStyle.getText().toString();
+//        String numPeople = editnumPeople.getText().toString();
+//        String numRoom = editnumRoom.getText().toString();
+//        String numBed = editnumBed.getText().toString();
+//        String numShower = editnumShower.getText().toString();
+//        String numParking = editnumParking.getText().toString();
+//        String phoneNum = editphoneNum.getText().toString();
 
 
-    public void afterUploadFile(Uri imageUri) {
+//        // 파이어 베이스 데이터베이스에 데이터 넣기
+//        // 1. 데이터 객체 생성
+//        ZezuInfo info = new ZezuInfo(dtHomeName, dtAdress, dtIntro, monthPrice, dtPreprice, dtDeposit, startDate, endDate, area,
+//                houseStyle, numPeople, numRoom, numBed, numShower, numParking, phoneNum);
+//
+//        if (imageUri != null) {
+//            info.fileUriString = imageUri.toString();
+//        }
+//        // 동부 , 서부, 지역별로 로 키값을 나눠서 만들어준다음에 작성을 했을시 거기에 해당하는 키값으로 들어가게 만들어 줘야한다 .
+//        // 2. 입력할 데이터의 키 생성
+//        String zezuKey = area;                    //zezuRef.push().getKey(); // 자동생성된 키를 가져온다
+//        // 3. key아래쪽으로 한칸 내려간 노드에서 작업을 할 것이다 / 생성된 키를 래퍼런스로 데이터를 입력
+//        zezuRef.child(zezuKey).child(dtHomeName).setValue(info);
+//        // 데이터 입력후 창 닫기
+//        dialog.dismiss();
+//        finish();
+//    }
+//
+//    // 화면에 Photo 버튼에서 자동 링크
+//    public void gotoGallery(View view) {
+//        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        // 가. 이미지 선택창 호출
+//        startActivityForResult(Intent.createChooser(intent, "앱을 선택하세요"), 100);
+//    }
 
-        String dtHomeName = editHomeName.getText().toString();
-        String dtAdress = editdtAdress.getText().toString();
-        String monthPrice = editmonthPrice.getText().toString();
-        String dtIntro = editdtIntro.getText().toString();
-        String dtPreprice = editdtPreprice.getText().toString();
-        String dtDeposit = editdtDeposit.getText().toString();
-        String startDate = editstartDate.getText().toString();
-        String endDate = editendDate.getText().toString();
-        String area = editarea.getText().toString();
-        String houseStyle = edithouseStyle.getText().toString();
-        String numPeople = editnumPeople.getText().toString();
-        String numRoom = editnumRoom.getText().toString();
-        String numBed = editnumBed.getText().toString();
-        String numShower = editnumShower.getText().toString();
-        String numParking = editnumParking.getText().toString();
-        String phoneNum = editphoneNum.getText().toString();
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == RESULT_OK) {
+//            switch (requestCode) {
+//                // 나. 이미지 선택창에서 선택된 이미지의 경로 추출
+//                case 100:
+//                    Uri imageUri = data.getData();
+//                    //  파일 이름을 가져온다
+////                    File file = new File(imageUri.getPath());
+////                    txtImage.setText(file.getName());
+//                    String filePath = getPathFromUri(this, imageUri);
+//                    txtImage.setText(filePath);
+//                    break;
+//            }
+//        }
+//    }
 
-
-        // 파이어 베이스 데이터베이스에 데이터 넣기
-        // 1. 데이터 객체 생성
-        ZezuInfo info = new ZezuInfo(dtHomeName, dtAdress, dtIntro, monthPrice, dtPreprice, dtDeposit, startDate, endDate, area,
-                houseStyle, numPeople, numRoom, numBed, numShower, numParking, phoneNum);
-
-        if (imageUri != null) {
-            info.fileUriString = imageUri.toString();
-        }
-        // 동부 , 서부, 지역별로 로 키값을 나눠서 만들어준다음에 작성을 했을시 거기에 해당하는 키값으로 들어가게 만들어 줘야한다 .
-        // 2. 입력할 데이터의 키 생성
-        String zezuKey = area;                    //zezuRef.push().getKey(); // 자동생성된 키를 가져온다
-        // 3. key아래쪽으로 한칸 내려간 노드에서 작업을 할 것이다 / 생성된 키를 래퍼런스로 데이터를 입력
-        zezuRef.child(zezuKey).child(dtHomeName).setValue(info);
-        // 데이터 입력후 창 닫기
-        dialog.dismiss();
-        finish();
-    }
-
-    // 화면에 Photo 버튼에서 자동 링크
-    public void gotoGallery(View view) {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        // 가. 이미지 선택창 호출
-        startActivityForResult(Intent.createChooser(intent, "앱을 선택하세요"), 100);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                // 나. 이미지 선택창에서 선택된 이미지의 경로 추출
-                case 100:
-                    Uri imageUri = data.getData();
-                    //  파일 이름을 가져온다
-//                    File file = new File(imageUri.getPath());
-//                    txtImage.setText(file.getName());
-                    String filePath = getPathFromUri(this, imageUri);
-                    txtImage.setText(filePath);
-                    break;
-            }
-        }
-    }
-
-    // Uri 에서 실제 경로 꺼내는 함수
-    public static String getPathFromUri(Context context, Uri uri) {
-        String realPath = "";
-
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-        if (cursor.moveToNext()) {
-            realPath = cursor.getString(cursor.getColumnIndex("_data"));
-        }
-        cursor.close();
-        return realPath;
-    }
+//    // Uri 에서 실제 경로 꺼내는 함수
+//    public static String getPathFromUri(Context context, Uri uri) {
+//        String realPath = "";
+//
+//        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+//        if (cursor.moveToNext()) {
+//            realPath = cursor.getString(cursor.getColumnIndex("_data"));
+//        }
+//        cursor.close();
+//        return realPath;
+//    }
 
     private void setValueSafe() {
         List<String> safe = new ArrayList<>();
@@ -334,7 +428,7 @@ public class WriteActivity extends AppCompatActivity {
         if (checkboxSafetyCard.isChecked() == true)
             safe.add(checkboxSafetyCard.getHint().toString());
 
-        datas.setmSafety(safe);
+        datas.setSafety(safe);
 
     }
 
@@ -365,7 +459,36 @@ public class WriteActivity extends AppCompatActivity {
         if (checkboxRefrigerator.isChecked() == true)
             facility.add(checkboxRefrigerator.getHint().toString());
 
-        datas.setmFacility(facility);
+        datas.setFacility(facility);
+    }
+
+    private void setValueKeyword() {
+        if (checkboxPublicTransport.isChecked() == true)
+            datas.setPublicTransport(checkboxPublicTransport.getHint().toString());
+        if (checkboxParking.isChecked() == true)
+            datas.setParking(checkboxParking.getHint().toString());
+        if (checkboxConvenience.isChecked() == true)
+            datas.setConvenience(checkboxConvenience.getHint().toString());
+        if (checkboxUpTown.isChecked() == true)
+            datas.setUpTown(checkboxUpTown.getHint().toString());
+        if (checkboxSchool.isChecked() == true)
+            datas.setSchool(checkboxSchool.getHint().toString());
+        if (checkboxChild.isChecked() == true)
+            datas.setChild(checkboxChild.getHint().toString());
+        if (checkboxPet.isChecked() == true)
+            datas.setPet(checkboxPet.getHint().toString());
+        if (checkboxFullOption.isChecked() == true)
+            datas.setFullOption(checkboxFullOption.getHint().toString());
+        if (checkboxQuiet.isChecked() == true)
+            datas.setQuiet(checkboxQuiet.getHint().toString());
+        if (checkboxYard.isChecked() == true)
+            datas.setYard(checkboxYard.getHint().toString());
+        if (checkboxNearTheSea.isChecked() == true)
+            datas.setNearTheSea(checkboxNearTheSea.getHint().toString());
+        if (checkboxNearTheForest.isChecked() == true)
+            datas.setNearTheForest(checkboxNearTheForest.getHint().toString());
+        if (checkboxNearTheAirport.isChecked() == true)
+            datas.setNearTheAirport(checkboxNearTheAirport.getHint().toString());
     }
 
     private void setValueAdditional() {
@@ -386,7 +509,6 @@ public class WriteActivity extends AppCompatActivity {
         datas.setArea(editarea.getText().toString());
         datas.setDtAdress(editdtAdress.getText().toString());
         datas.setDtIntro(editdtIntro.getText().toString());
-        datas.setPhoneNum(editphoneNum.getText().toString());
     }
 
 

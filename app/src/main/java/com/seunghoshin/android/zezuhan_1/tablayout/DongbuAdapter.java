@@ -14,42 +14,49 @@ import com.seunghoshin.android.zezuhan_1.DetailActivity;
 import com.seunghoshin.android.zezuhan_1.R;
 import com.seunghoshin.android.zezuhan_1.domain.ZezuInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
 /**
  * Created by SeungHoShin on 2017. 7. 13..
  */
 
-public class DongbuAdapter extends RecyclerView.Adapter<DongbuAdapter.Holder>{
-    private List<ZezuInfo> data;
+public class DongbuAdapter extends RecyclerView.Adapter<DongbuAdapter.Holder> {
+
+    List<ZezuInfo> datas = new ArrayList<>();
     private LayoutInflater inflater;
 
     //glide 사용 을 위한 컨텍 스트
     private Context context = null;
 
-    public DongbuAdapter(Context context, List<ZezuInfo> data) {
+    public DongbuAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.data = data;
     }
 
-    public void setData(List<ZezuInfo> data) {
-        this.data = data;
+    public DongbuAdapter() {
+
+    }
+
+    public void setData(List<ZezuInfo> jejuList) {
+        this.datas = jejuList;
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return datas.size();
     }
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         // 이게 없으면 위에 null 값이 떠서 앱이 죽는다
-        if (context == null)
-            context = parent.getContext();
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_zezu, parent, false);
+        if (context == null) {
+            this.context = parent.getContext();
+        }
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_dongbu, parent, false);
         return new Holder(view);
     }
 
@@ -57,26 +64,24 @@ public class DongbuAdapter extends RecyclerView.Adapter<DongbuAdapter.Holder>{
     public void onBindViewHolder(Holder holder, int position) {
 
 
-        ZezuInfo info = data.get(position);
-        holder.dtHomeName.setText(info.dtHomeName);
-        holder.dtAdress.setText(info.dtAdress);
-        holder.monthPrice.setText(info.monthPrice);
-        holder.position = position;
+        ZezuInfo info = datas.get(position);
 
+        holder.setPosition(position);
+        holder.dtHomeName.setText(info.getDtHomeName());
+        holder.dtAdress.setText(info.getDtAdress());
+        holder.monthPrice.setText("한달 " + info.getMonthPrice() + "원");
 
         //이미지 파일은 Glide를 써야한다 . 그렇지 않으면 직접 Bitmap으로 파싱해야한다
 
         Glide.with(context)
-                .load(data.get(position).fileUriString) //로드할 대상
+                .load(info.getFilePath()) //로드할 대상
                 .centerCrop()
                 .into(holder.imageView);
-
     }
-
 
     class Holder extends RecyclerView.ViewHolder {
 
-        private int position;
+        int position;
 
         @BindView(R.id.dtHomeName)
         TextView dtHomeName;
@@ -97,16 +102,22 @@ public class DongbuAdapter extends RecyclerView.Adapter<DongbuAdapter.Holder>{
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), DetailActivity.class);
-                    intent.putExtra("LIST_POSITION",position);
+                    intent.putExtra("FragPosi", datas.get(position));
+                    intent.putExtra("LIST_POSITION", position);
                     intent.putExtra("TAB", "dongbu");
                     v.getContext().startActivity(intent);
                 }
             });
 
         }
+
+        private void setPosition(int position) {
+            this.position = position;
+        }
     }
-
-
 }
+
+
+
 
 

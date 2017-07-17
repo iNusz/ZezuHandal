@@ -102,14 +102,6 @@
                 android:inputType="textPostalAddress" />
 
             <EditText
-                android:id="@+id/editphoneNum"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="숙소 전화번호"
-                android:inputType="phone" />
-
-            <EditText
                 android:id="@+id/editdtIntro"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
@@ -496,29 +488,29 @@
             </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/txtImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="81dp"
-                android:layout_marginLeft="16dp"
-                android:text="(Image Path)"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent" />
+            <!--<TextView-->
+                <!--android:id="@+id/txtImage"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="81dp"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:text="(Image Path)"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintLeft_toLeftOf="parent" />-->
 
-            <Button
-                android:id="@+id/btnFile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="gotoGallery"
-                android:text="사진 불러오기"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_weight="0.06" />
+            <!--<Button-->
+                <!--android:id="@+id/btnFile"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:onClick="gotoGallery"-->
+                <!--android:text="사진 불러오기"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintLeft_toLeftOf="parent"-->
+                <!--android:layout_weight="0.06" />-->
 
             <Button
                 android:id="@+id/btnPost"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="postData"
                 android:text="등록하세요"

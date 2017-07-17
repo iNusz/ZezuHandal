@@ -1,12 +1,13 @@
 package com.seunghoshin.android.zezuhan_1.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by SeungHoShin on 2017. 7. 10..
  */
 
-public class ZezuInfo {
+public class ZezuInfo implements Serializable{
 
     public String dtMainImage; //메인 이미지 , 더미용
     public String dtHomeName; // 숙소명
@@ -25,34 +26,158 @@ public class ZezuInfo {
     public String numBed; //침대수
     public String numShower; //욕실수
     public String numParking; //주차장 수
-    public String phoneNum; //숙소 전화번호
+    public String phoneNumb; //숙소 전화번호
+    public String mPublicTransport; // 교통
+    public String mParking; // 주차장
+    public String mConvenience; // 편의시설
+    public String mUpTown;
+    public String mSchool;
+    public String mChild;
+    public String mPet; // 반려동물
+    public String mFullOption;
+    public String mQuiet;
+    public String mYard;
+    public String mNearTheSea;
+    public String mNearTheForest;
+    public String mNearTheAirport;
+    public String filePath;
 
     private List<String> mFacility, mSafety;
 
-    public String getPhoneNum() {
-        return phoneNum;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public void setPhoneNum(String phoneNum) {
-        this.phoneNum = phoneNum;
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
-    public List<String> getmFacility() {
+    public String getPublicTransport() {
+        return mPublicTransport;
+    }
+
+    public String getParking() {
+        return mParking;
+    }
+
+    public void setParking(String mParking) {
+        this.mParking = mParking;
+    }
+
+    public String getConvenience() {
+        return mConvenience;
+    }
+
+    public void setConvenience(String mConvenience) {
+        this.mConvenience = mConvenience;
+    }
+
+    public String getUpTown() {
+        return mUpTown;
+    }
+
+    public void setUpTown(String mUpTown) {
+        this.mUpTown = mUpTown;
+    }
+
+    public String getSchool() {
+        return mSchool;
+    }
+
+    public void setSchool(String mSchool) {
+        this.mSchool = mSchool;
+    }
+
+    public String getChild() {
+        return mChild;
+    }
+
+    public void setChild(String mChild) {
+        this.mChild = mChild;
+    }
+
+    public String getPet() {
+        return mPet;
+    }
+
+    public void setPet(String mPet) {
+        this.mPet = mPet;
+    }
+
+    public String getFullOption() {
+        return mFullOption;
+    }
+
+    public void setFullOption(String mFullOption) {
+        this.mFullOption = mFullOption;
+    }
+
+    public String getQuiet() {
+        return mQuiet;
+    }
+
+    public void setQuiet(String mQuiet) {
+        this.mQuiet = mQuiet;
+    }
+
+    public String getYard() {
+        return mYard;
+    }
+
+    public void setYard(String mYard) {
+        this.mYard = mYard;
+    }
+
+    public String getNearTheSea() {
+        return mNearTheSea;
+    }
+
+    public void setNearTheSea(String mNearTheSea) {
+        this.mNearTheSea = mNearTheSea;
+    }
+
+    public String getNearTheForest() {
+        return mNearTheForest;
+    }
+
+    public void setNearTheForest(String mNearTheForest) {
+        this.mNearTheForest = mNearTheForest;
+    }
+
+    public String getNearTheAirport() {
+        return mNearTheAirport;
+    }
+
+    public void setNearTheAirport(String mNearTheAirport) {
+        this.mNearTheAirport = mNearTheAirport;
+    }
+    public void setPublicTransport(String mPublicTransport) {
+        this.mPublicTransport = mPublicTransport;
+    }
+
+    public String getphoneNumb() {
+        return phoneNumb;
+    }
+
+    public void setphoneNumb(String phoneNumb) {
+        this.phoneNumb = phoneNumb;
+    }
+
+    public List<String> getFacility() {
         return mFacility;
     }
 
-    public void setmFacility(List<String> mFacility) {
+    public void setFacility(List<String> mFacility) {
         this.mFacility = mFacility;
     }
 
-    public List<String> getmSafety() {
+    public List<String> getSafety() {
         return mSafety;
     }
 
-    public void setmSafety(List<String> mSafety) {
+    public void setSafety(List<String> mSafety) {
         this.mSafety = mSafety;
     }
-
 
     public String getDtMainImage() {
         return dtMainImage;
@@ -198,7 +323,7 @@ public class ZezuInfo {
 
 
     // file Uri는 빼줌
-    public ZezuInfo(String dtHomeName, String dtAdress, String dtIntro, String monthPrice, String phoneNum,
+    public ZezuInfo(String dtHomeName, String dtAdress, String dtIntro, String monthPrice, String phoneNumb,
                     String dtPreprice, String dtDeposit, String startDate, String endDate, String area,
                     String houseStyle, String numPeople, String numRoom, String numBed, String numShower, String numParking) {
         this.dtHomeName = dtHomeName;
@@ -216,7 +341,7 @@ public class ZezuInfo {
         this.numBed = numBed;
         this.numShower = numShower;
         this.numParking = numParking;
-        this.phoneNum = phoneNum;
+        this.phoneNumb = phoneNumb;
     }
 
 

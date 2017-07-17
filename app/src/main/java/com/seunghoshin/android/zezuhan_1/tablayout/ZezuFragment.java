@@ -34,7 +34,6 @@ public class ZezuFragment extends Fragment {
 
     RecyclerView recycler;
     ZezuAdapter adapter;
-    public static List<ZezuInfo> data = new ArrayList<>();
 
     // 프로그래스 다이얼로그
     private ProgressDialog dialog;
@@ -51,22 +50,25 @@ public class ZezuFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_zezu, container, false);
 
-        database = FirebaseDatabase.getInstance();
-        zezuRef = database.getReference("zezu");
-
-        ButterKnife.bind(this, view);
-
-        recycler = (RecyclerView) view.findViewById(R.id.recycler);
-        adapter = new ZezuAdapter(container.getContext(), data);
-        recycler.setAdapter(adapter);
-        recycler.setLayoutManager(new LinearLayoutManager(container.getContext()));
-
-
         //다이얼로그
         dialog = new ProgressDialog(container.getContext());
         dialog.setTitle("로딩중");
         dialog.setMessage("목록을 로딩중입니다... 잠시만 기다려주세요");
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+        database = FirebaseDatabase.getInstance();
+        zezuRef = database.getReference("Jeju-in-one-month");
+
+        ButterKnife.bind(this, view);
+
+        recycler = (RecyclerView) view.findViewById(R.id.recycler);
+        loadData("제주시");
+        adapter = new ZezuAdapter();
+        recycler.setAdapter(adapter);
+        recycler.setLayoutManager(new LinearLayoutManager(container.getContext()));
+
+
+
 
         return view;
 
@@ -76,26 +78,34 @@ public class ZezuFragment extends Fragment {
     public void onStart() {
         super.onStart();
         dialog.show();
-        loadData();
+//        loadData();
 
     }
 
-    // Read DataBase
-    // 데이터를 뿌려주는 이벤트 리스너를 달아준다
-    private void loadData() {
-        Query query = zezuRef.child("제주시").orderByKey();
+    // 뒤로가기 할때 무한반복이 걸림으로 풀어준다
+    @Override
+    public void onResume() {
+        super.onResume();
+        dialog.dismiss();
+    }
 
+    private void loadData(final String area){
+        List<ZezuInfo> jejuList = null;
+        Query query = zezuRef.orderByChild("area").equalTo(area);
         query.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                data.clear();
-                for (DataSnapshot item : dataSnapshot.getChildren()) {
-                    ZezuInfo info = item.getValue(ZezuInfo.class);
-                    data.add(info);
+                List<ZezuInfo> jejuList = new ArrayList<ZezuInfo>();
+                for(DataSnapshot item : dataSnapshot.getChildren()){
+                    try {
+                        ZezuInfo info = item.getValue(ZezuInfo.class);
+                        jejuList.add(info);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
-                refreshList(data);
                 dialog.dismiss();
+                refreshList(jejuList);
             }
 
             @Override
@@ -103,13 +113,38 @@ public class ZezuFragment extends Fragment {
 
             }
         });
-
-
     }
 
+    // Read DataBase
+    // 데이터를 뿌려주는 이벤트 리스너를 달아준다
+//    private void loadData() {
+//        Query query = zezuRef.child("제주시").orderByKey();
+//
+//        query.addValueEventListener(new ValueEventListener() {
+//
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                data.clear();
+//                for (DataSnapshot item : dataSnapshot.getChildren()) {
+//                    ZezuInfo info = item.getValue(ZezuInfo.class);
+//                    data.add(info);
+//                }
+//                refreshList(data);
+//                dialog.dismiss();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//
+//    }
 
-    private void refreshList(List<ZezuInfo> data) {
-        adapter.setData(data);
+
+    private void refreshList(List<ZezuInfo> jejuList) {
+        adapter.setData(jejuList);
         adapter.notifyDataSetChanged();
     }
 

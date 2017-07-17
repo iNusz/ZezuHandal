@@ -22,6 +22,8 @@ import com.seunghoshin.android.zezuhan_1.domain.ZezuInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,7 +35,6 @@ public class SugiFragment extends Fragment {
 
     RecyclerView recycler;
     SugiAdapter adapter;
-    public static List<ZezuInfo> data = new ArrayList<>();
 
     // 프로그래스 다이얼로그
     private ProgressDialog dialog;
@@ -48,16 +49,7 @@ public class SugiFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         View view = inflater.inflate(R.layout.fragment_sugi, container, false);
-
-        database = FirebaseDatabase.getInstance();
-        zezuRef = database.getReference("zezu");
-
-        recycler = (RecyclerView) view.findViewById(R.id.recycler);
-        adapter = new SugiAdapter(container.getContext(), data);
-        recycler.setAdapter(adapter);
-        recycler.setLayoutManager(new LinearLayoutManager(container.getContext()));
 
         //다이얼로그
         dialog = new ProgressDialog(container.getContext());
@@ -65,35 +57,56 @@ public class SugiFragment extends Fragment {
         dialog.setMessage("목록을 로딩중입니다... 잠시만 기다려주세요");
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
+        database = FirebaseDatabase.getInstance();
+        zezuRef = database.getReference("Jeju-in-one-month");
+
+        ButterKnife.bind(this, view);
+
+        recycler = (RecyclerView) view.findViewById(R.id.recycler);
+        loadData("서귀포");
+        adapter = new SugiAdapter();
+        recycler.setAdapter(adapter);
+        recycler.setLayoutManager(new LinearLayoutManager(container.getContext()));
+
+
+
 
         return view;
+
     }
+
     @Override
     public void onStart() {
         super.onStart();
         dialog.show();
-        loadData();
+//        loadData();
+
     }
 
-    // Read DataBase
-    // 데이터를 뿌려주는 이벤트 리스너를 달아준다
-    private void loadData() {
-        Query query = zezuRef.child("서귀포").orderByKey();
+//    // 뒤로가기 할때 무한반복이 걸림으로 풀어준다
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        dialog.dismiss();
+//    }
 
+    private void loadData(final String area){
+        List<ZezuInfo> jejuList = null;
+        Query query = zezuRef.orderByChild("area").equalTo(area);
         query.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // 해당 데이터를 리스트에 저장한다 . 아래에 있는 변경된데이터
-                data.clear();
-                for (DataSnapshot item : dataSnapshot.getChildren()) {
-                    // 파이어베이스 모든 데이터 하나단위를 클래스로 변경해준다
-                    ZezuInfo info = item.getValue(ZezuInfo.class);
-                    data.add(info);
+                List<ZezuInfo> jejuList = new ArrayList<ZezuInfo>();
+                for(DataSnapshot item : dataSnapshot.getChildren()){
+                    try {
+                        ZezuInfo info = item.getValue(ZezuInfo.class);
+                        jejuList.add(info);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
-
-                refreshList(data);
                 dialog.dismiss();
+                refreshList(jejuList);
             }
 
             @Override
@@ -101,13 +114,38 @@ public class SugiFragment extends Fragment {
 
             }
         });
-
-
     }
 
+    // Read DataBase
+    // 데이터를 뿌려주는 이벤트 리스너를 달아준다
+//    private void loadData() {
+//        Query query = zezuRef.child("제주시").orderByKey();
+//
+//        query.addValueEventListener(new ValueEventListener() {
+//
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                data.clear();
+//                for (DataSnapshot item : dataSnapshot.getChildren()) {
+//                    ZezuInfo info = item.getValue(ZezuInfo.class);
+//                    data.add(info);
+//                }
+//                refreshList(data);
+//                dialog.dismiss();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//
+//    }
 
-    private void refreshList(List<ZezuInfo> data) {
-        adapter.setData(data);
+
+    private void refreshList(List<ZezuInfo> jejuList) {
+        adapter.setData(jejuList);
         adapter.notifyDataSetChanged();
     }
 

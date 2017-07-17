@@ -21,10 +21,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by SeungHoShin on 2017. 7. 11..
+ * Created by SeungHoShin on 2017. 7. 17..
  */
 
-public class ZezuAdapter extends RecyclerView.Adapter<ZezuAdapter.Holder> {
+public class SubuAdapter extends RecyclerView.Adapter<SubuAdapter.Holder>{
 
     List<ZezuInfo> datas = new ArrayList<>();
     private LayoutInflater inflater;
@@ -34,11 +34,11 @@ public class ZezuAdapter extends RecyclerView.Adapter<ZezuAdapter.Holder> {
     private Context context = null;
 
 
-    public ZezuAdapter(Context context) {
+    public SubuAdapter(Context context) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public ZezuAdapter() {
+    public SubuAdapter() {
 
     }
 
@@ -57,7 +57,7 @@ public class ZezuAdapter extends RecyclerView.Adapter<ZezuAdapter.Holder> {
         if (context == null) {
             this.context = parent.getContext();
         }
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_zezu, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_subu, parent, false);
         return new Holder(view);
     }
 
@@ -111,7 +111,7 @@ public class ZezuAdapter extends RecyclerView.Adapter<ZezuAdapter.Holder> {
 
                     intent.putExtra("FragPosi", datas.get(position));
                     intent.putExtra("LIST_POSITION",position);
-                    intent.putExtra("TAB", "zezu");
+                    intent.putExtra("TAB", "subu");
                     v.getContext().startActivity(intent);
 
                 }
